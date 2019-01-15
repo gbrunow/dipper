@@ -1,16 +1,30 @@
-import { Effect, withEffects } from './effect';
+import { canReact, Reaction } from './reaction';
 
-export interface StateArgs {
+export interface StateProperties {
     name: string;
-    effects?: Effect[];
-}
-export interface IState extends StateArgs {
-    name: string;
-    effects: Effect[];
-    addEffect: (effect: Effect) => IState;
+    reactions?: Reaction[];
 }
 
-export const State = ({ name, effects = [] }: StateArgs): any => {
-    const state = { name, effects };
-    return Object.assign(state, withEffects(state));
+export interface State extends StateProperties {
+    reactions: Reaction[];
+    add: (reaction: Reaction) => State;
+    emit: (event: string) => void;
+}
+
+export const canEmit = (state: StateProperties) => ({
+    emit: (event: string) => {
+        if (state.reactions) {
+            state.reactions
+                .filter(r => r.event === event)
+                .map(r => r.action(state));
+        }
+    }
+});
+
+export const CreateState = ({ name, reactions = [] }: StateProperties) => {
+    const state = {
+        name,
+        reactions,
+    };
+    return Object.assign(state, canReact(state), canEmit(state))
 };

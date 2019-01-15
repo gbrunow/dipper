@@ -1,20 +1,31 @@
-import { Effect } from './effect';
-import { State, StateArgs } from './state';
+import { Reaction } from './reaction';
+import { CreateState, State, StateProperties } from './state';
 
-const escape: Effect = {
+const escape: Reaction = {
     event: 'escape',
-    action: (state: StateArgs) => console.log(`escape ${state.name}`)
+    action: (state: StateProperties) => console.log(` > escaping ${state.name} state`)
 }
 
-let initial = State({ name: 'initial' })
-    .addEffect({
+const click: Reaction = {
+    event: 'click',
+    action: (state: StateProperties) => console.log(` > reacting to click on ${state.name} state`)
+}
+
+const initial: State = CreateState({ name: 'initial' })
+    .add({
         event: 'enter',
-        action: (state: StateArgs) => console.log(`entered ${state.name}`)
+        action: (state: StateProperties) => console.log(` > entering ${state.name} state`)
     })
-    .addEffect({
+    .add({
+        event: 'enter',
+        action: (state: StateProperties) => console.log(` > tell someone else we're entering ${state.name} state`)
+    })
+    .add({
         event: 'leave',
-        action: (state: StateArgs) => console.log(`leave ${state.name}`)
+        action: (state: StateProperties) => console.log(` > leaving ${state.name} state`)
     })
-    .addEffect(escape);
+    .add(click)
+    .add(escape);
 
 console.log(initial);
+initial.reactions.forEach(e => initial.emit(e.event));
