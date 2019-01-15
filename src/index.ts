@@ -37,7 +37,7 @@ const sayHeyOnEnter: State = CreateState({
 }).add(click, escape);
 
 const sayByeOnLeave = sayHeyOnEnter
-    .extend()
+    .extend({ name: 'another talker' })
     .add(
         {
             event: 'leave',
