@@ -16,6 +16,10 @@
     "statemachine",
     "states"
   ],
+  "repository": {
+    "url": "https://github.com/gbrunow/dipper",
+    "type": "git"
+  },
   "author": "Guilherme Brunow Gomes",
   "license": "ISC",
   "devDependencies": {

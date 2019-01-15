@@ -8,7 +8,7 @@ export type Action = (state: StateArgs) => void;
 /**
  * Effect defines reactions to certain events
  */
-export interface Effect {
+export type Effect = {
     event: string; // enter, leave, escape, click, etc
     action: Action;
 }
@@ -22,3 +22,18 @@ export const withEffects = (obj: any) => ({
         return obj;
     }
 });
+
+// export const withEffects = (obj: any) => ({
+//     ...obj,
+//     addEffect: (effect: Effect) => {
+//         obj.effects.push({
+//             event: effect.event,
+//             action: () => effect.action(obj)
+//         });
+//         return obj;
+//     }
+// });
+
+// export const withEffects = (obj: any) => ({
+//     test: () => console.log('test', obj)
+// });
