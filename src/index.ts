@@ -27,5 +27,31 @@ const initial: State = CreateState({ name: 'initial' })
     .add(click)
     .add(escape);
 
-console.log(initial);
-initial.reactions.forEach(e => initial.emit(e.event));
+initial.emit(...initial.reactions.map(r => r.event));
+
+const sayHeyOnEnter: State = CreateState({
+    name: 'talker', reactions: [{
+        event: 'enter',
+        action: (state: StateProperties) => console.log(`${state.name} says: hey.`)
+    }]
+}).add(click, escape);
+
+const sayByeOnLeave = sayHeyOnEnter
+    .extend()
+    .add(
+        {
+            event: 'leave',
+            action: (state: StateProperties) => console.log(`${state.name} says: bye.`)
+        }, {
+            event: 'click',
+            action: (state: StateProperties) => console.log(`another click handler on ${state.name}`)
+        }
+    )
+    .emit('enter')
+    .emit('click', 'escape')
+    .emit('leave');
+
+sayHeyOnEnter
+    .emit('enter')
+    .emit('click', 'escape')
+    .emit('leave');
