@@ -14,8 +14,8 @@ export type Reaction = {
 }
 
 export const canReact = (obj: any) => ({
-    add: (reaction: Reaction) => {
-        obj.reactions.push(reaction);
+    add: (...reactions: Reaction[]) => {
+        obj.reactions.push(...reactions);
         return obj;
     }
 });

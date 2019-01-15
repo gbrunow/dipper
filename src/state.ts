@@ -7,24 +7,31 @@ export interface StateProperties {
 
 export interface State extends StateProperties {
     reactions: Reaction[];
-    add: (reaction: Reaction) => State;
-    emit: (event: string) => void;
+    add: (...reactions: Reaction[]) => State;
+    emit: (...events: string[]) => State;
+    extend: () => State;
 }
 
-export const canEmit = (state: StateProperties) => ({
-    emit: (event: string) => {
+export const canEmit = (state: State) => ({
+    emit: (...events: string[]): State => {
         if (state.reactions) {
             state.reactions
-                .filter(r => r.event === event)
+                .filter(r => events.some(e => e === r.event))
                 .map(r => r.action(state));
         }
+
+        return state;
     }
 });
 
+export const canExtend = (state: StateProperties) => ({
+    extend: (name?: string): State => CreateState({
+        name: name || state.name,
+        reactions: [...(state.reactions || [])]
+    })
+});
+
 export const CreateState = ({ name, reactions = [] }: StateProperties) => {
-    const state = {
-        name,
-        reactions,
-    };
-    return Object.assign(state, canReact(state), canEmit(state))
+    const state = Object.create({ name, reactions })
+    return Object.assign(state, canReact(state), canExtend(state), canEmit(state));
 };
