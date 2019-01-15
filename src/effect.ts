@@ -22,18 +22,3 @@ export const withEffects = (obj: any) => ({
         return obj;
     }
 });
-
-// export const withEffects = (obj: any) => ({
-//     ...obj,
-//     addEffect: (effect: Effect) => {
-//         obj.effects.push({
-//             event: effect.event,
-//             action: () => effect.action(obj)
-//         });
-//         return obj;
-//     }
-// });
-
-// export const withEffects = (obj: any) => ({
-//     test: () => console.log('test', obj)
-// });
