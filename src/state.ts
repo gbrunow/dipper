@@ -9,7 +9,7 @@ export interface State extends StateProperties {
     reactions: Reaction[];
     add: (...reactions: Reaction[]) => State;
     emit: (...events: string[]) => State;
-    extend: () => State;
+    extend: ({ name }: { name: string }) => State;
 }
 
 export const canEmit = (state: State) => ({
@@ -24,8 +24,8 @@ export const canEmit = (state: State) => ({
     }
 });
 
-export const canExtend = (state: StateProperties) => ({
-    extend: (name?: string): State => CreateState({
+export const canExtend = (state: State) => ({
+    extend: ({ name }: { name: string }): State => CreateState({
         name: name || state.name,
         reactions: [...(state.reactions || [])]
     })
