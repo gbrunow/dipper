@@ -10,7 +10,7 @@ export interface IState extends StateArgs {
     addEffect: (effect: Effect) => IState;
 }
 
-export const State = ({ name, effects = [] }: StateArgs): IState => {
+export const State = ({ name, effects = [] }: StateArgs): any => {
     const state = { name, effects };
-    return Object.assign({}, withEffects(state), state);
+    return Object.assign(state, withEffects(state));
 };
