@@ -14,7 +14,9 @@ const click: Reaction = {
 const initial: State = CreateState({ name: 'initial' })
     .add({
         event: 'enter',
-        action: (state: StateProperties) => console.log(` > entering ${state.name} state`)
+        action: (state: StateProperties) => {
+            console.log(` > entering ${state.name} state`);
+        }
     })
     .add({
         event: 'enter',
@@ -27,12 +29,10 @@ const initial: State = CreateState({ name: 'initial' })
     .add(click)
     .add(escape);
 
-initial.emit(...initial.reactions.map(r => r.event));
-
 const sayHeyOnEnter: State = CreateState({
     name: 'talker', reactions: [{
         event: 'enter',
-        action: (state: StateProperties) => console.log(`${state.name} says: hey.`)
+        action: (state: StateProperties, data: { getnum: () => number }) => console.log(` + ${state.name} says: hey.${".".repeat(data.getnum())}`)
     }]
 }).add(click, escape);
 
@@ -41,17 +41,21 @@ const sayByeOnLeave = sayHeyOnEnter
     .add(
         {
             event: 'leave',
-            action: (state: StateProperties) => console.log(`${state.name} says: bye.`)
+            action: (state: StateProperties, data: { person: string }) => console.log(` - ${state.name} says: you know nothing, ${data.person}.`)
         }, {
             event: 'click',
-            action: (state: StateProperties) => console.log(`another click handler on ${state.name}`)
+            action: (state: StateProperties) => console.log(` - another click handler on ${state.name}`)
         }
     )
-    .emit('enter')
-    .emit('click', 'escape')
-    .emit('leave');
+    .emit('enter', { getnum: () => Math.round(Math.random() * 10) })
+    .emit('click')
+    .emit('escape')
+    .emit('leave', { person: 'jon snow' });
+
+initial.emit('enter');
 
 sayHeyOnEnter
-    .emit('enter')
-    .emit('click', 'escape')
+    .emit('enter', { getnum: () => Math.round(Math.random() * 25) })
+    .emit('click')
+    .emit('escape')
     .emit('leave');

@@ -5,6 +5,5 @@ export interface IStateMachine {
     initialState: State;
     previousState: State;
     currentState: State;
-
 }
 
