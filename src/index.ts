@@ -47,7 +47,7 @@ const sayByeOnLeave = sayHeyOnEnter
             action: (state: StateProperties) => console.log(` - another click handler on ${state.name}`)
         }
     )
-    .emit('enter', { getnum: () => Math.round(Math.random() * 10) })
+    .emit('enter', { getnum: () => Math.random() * 10 })
     .emit('click')
     .emit('escape')
     .emit('leave', { person: 'jon snow' });
@@ -55,7 +55,7 @@ const sayByeOnLeave = sayHeyOnEnter
 initial.emit('enter');
 
 sayHeyOnEnter
-    .emit('enter', { getnum: () => Math.round(Math.random() * 25) })
+    .emit('enter', { getnum: () => Math.random() * 25 })
     .emit('click')
     .emit('escape')
     .emit('leave');
