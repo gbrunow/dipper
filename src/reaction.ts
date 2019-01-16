@@ -3,7 +3,7 @@ import { StateProperties } from './state';
 /**
  * Actions are callbacks used by reactions
  */
-export type Action = (state: StateProperties) => void;
+export type Action = (state: StateProperties, data?: any) => void;
 
 /**
  * Reaction defines side effects to a given event
