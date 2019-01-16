@@ -1,37 +1,42 @@
-import { canReact, Reaction } from './reaction';
+import { Reaction } from './reaction';
 
 export interface StateProperties {
     name: string;
     reactions?: Reaction[];
 }
 
-export interface State extends StateProperties {
-    reactions: Reaction[];
-    add: (...reactions: Reaction[]) => State;
-    emit: (event: string, data?: any) => State;
-    extend: ({ name }: { name: string }) => State;
-}
 
-export const CreateState = ({ name, reactions = [] }: StateProperties) => {
-    const state = Object.create({ name, reactions });
-    return Object.assign(state, canReact(state), canExtend(state), canEmit(state));
-};
+export class State {
+    private _reactions: Reaction[];
+    private _name: string;
 
-export const canEmit = (state: State) => ({
-    emit: (event: string, data?: any): State => {
-        if (state.reactions) {
-            state.reactions
-                .filter(r => event === r.event)
-                .map(r => r.action(state, data));
-        }
-
-        return state;
+    constructor({ name, reactions }: StateProperties) {
+        this._name = name;
+        this._reactions = reactions || [];
     }
-});
 
-export const canExtend = (state: State) => ({
-    extend: ({ name }: { name: string }): State => CreateState({
-        name: name || state.name,
-        reactions: [...(state.reactions || [])]
-    })
-});
+    public get name(): string {
+        return this._name;
+    }
+
+    public add(...reactions: Reaction[]): State {
+        this._reactions.push(...reactions);
+
+        return this;
+    }
+
+    public emit(event: string, data?: any) {
+        this._reactions
+            .filter(r => r.event === event)
+            .map(r => r.action(this, data));
+
+        return this;
+    }
+
+    public extend({ name }: { name: string }) {
+        return new State({
+            name,
+            reactions: [...this._reactions]
+        });
+    }
+}
