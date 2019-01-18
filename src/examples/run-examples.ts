@@ -1,13 +1,7 @@
-import { BlinkExample } from './blink';
-import { Example1 } from './example1';
+// import { BlinkExample } from './blink';
+import { BlinkStateMachine } from './blink-state-machine';
+import { HelloWorldSM } from './hello-world.sm';
 
-BlinkExample.run();
-Example1.run();
-
-function printSeparator(exampleName: string) {
-    // console.log((".".repeat(exampleName.length + 2))
-    // console.log('+  Blink Example  +')
-    // console.log('==================')
-}
-
-// console.log(".".repeat(10));
+// BlinkExample.run();
+BlinkStateMachine.run();
+HelloWorldSM.run();
