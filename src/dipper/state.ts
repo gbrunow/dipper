@@ -1,22 +1,33 @@
+import { Observable, Subject } from 'rxjs';
+
 import { Hook } from './hook';
 
 export interface StateProperties {
-    name: string;
+    name?: string;
     hooks?: Hook[];
 }
 
+export interface Event {
+    name: string;
+    data: any;
+}
 
 export class State {
     private _hooks: Hook[];
     private _name: string;
+    private _$event: Subject<Event> = new Subject<Event>();
 
-    constructor({ name, hooks }: StateProperties) {
+    constructor({ name = 'state', hooks = [] }: StateProperties) {
         this._name = name;
-        this._hooks = hooks || [];
+        this._hooks = hooks;
     }
 
     public get name(): string {
         return this._name;
+    }
+
+    public get $event(): Observable<Event> {
+        return this._$event.asObservable();
     }
 
     public hook(...hooks: Hook[]): State {
@@ -25,16 +36,18 @@ export class State {
         return this;
     }
 
-    public run(hookName: string, data = {}) {
+    public trigger(hookName: string, data = {}) {
         this._hooks
             .filter(r => r.name === hookName)
-            .map(r => r.action(this, data));
+            .map(r => r.action(data));
 
         return this;
     }
 
     public emit(event: string, data = {}) {
+        this._$event.next({ name: event, data });
 
+        return this;
     }
 
     /**

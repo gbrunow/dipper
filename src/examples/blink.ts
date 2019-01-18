@@ -4,10 +4,7 @@ export module BlinkExample {
     export function run() {
         function turn(on: boolean) {
             const light = on ? '💡' : ' ';
-            // process.stdout.clearLine();
-            // process.stdout.cursorTo(0);
             process.stdout.write(`blink example: ${light} \r`);
-            // console.log(`blink: ${light}`);
         }
 
         const on = (new State({ name: 'on' }))
@@ -15,6 +12,7 @@ export module BlinkExample {
                 name: 'enter',
                 action: () => turn(true)
             });
+
 
         const off = (new State({ name: 'off' }))
             .hook({
@@ -34,16 +32,15 @@ export module BlinkExample {
 
         const timer = setInterval(() => {
             if (isOn) {
-                on.run('enter');
+                on.trigger('enter');
             } else {
-                off.run('enter');
+                off.trigger('enter');
             }
-
             isOn = !isOn;
             count++;
             if (count === 20) {
                 clearInterval(timer);
-                end.run('enter');
+                end.trigger('enter');
             }
         }, 500);
     }
