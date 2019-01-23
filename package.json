@@ -2,15 +2,15 @@
   "name": "dipper.js",
   "version": "0.0.1",
   "description": "A state machine library for TypeScript",
-  "main": "index.js",
-  "types": "lib/index",
+  "main": "lib/index.js",
+  "types": "lib/index/d/ts",
   "scripts": {
     "start": "npm run build:live",
     "build": "rm -rf lib/* ; tsc -p .",
-    "build:live": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/examples/run-examples.ts",
+    "build:live": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' examples/run-examples.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "publisher": "npm run build ; npm publish",
-    "publisher:force": "npm unpublish --force ; npm run publisher"
+    "republish": "npm unpublish --force ; npm run publisher"
   },
   "keywords": [
     "state",
@@ -36,8 +36,5 @@
   },
   "publishConfig": {
     "registry": "http://npm.caps.ua.edu/"
-  },
-  "files": [
-    "/lib/dipper"
-  ]
+  }
 }

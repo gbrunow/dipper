@@ -1,2 +1,3 @@
-require('ts-node').register();
-require('./examples/run-examples')
+export { Hook, Action } from './hook';
+export { State } from './state';
+export { StateMachine } from './state-machine';
