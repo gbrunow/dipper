@@ -8,7 +8,7 @@ export module BlinkStateMachine {
         }
 
 
-        const on = (new State({}))
+        const on = (new State())
             .hook({
                 name: 'enter',
                 action: () => {
@@ -19,7 +19,7 @@ export module BlinkStateMachine {
 
         let count = 0;
 
-        const off = (new State({}))
+        const off = (new State())
             .hook({
                 name: 'enter',
                 action: () => {
@@ -28,7 +28,7 @@ export module BlinkStateMachine {
                 }
             });
 
-        const end = (new State({}))
+        const end = (new State())
             .hook({
                 name: 'enter',
                 action: () => process.stdout.write('\nblink state machine example finished. ✔️\r\n')

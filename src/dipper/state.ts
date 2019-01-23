@@ -17,7 +17,7 @@ export class State {
     private _name: string;
     private _$event: Subject<Event> = new Subject<Event>();
 
-    constructor({ name = 'state', hooks = [] }: StateProperties) {
+    constructor({ name = 'state', hooks = [] }: StateProperties = {}) {
         this._name = name;
         this._hooks = hooks;
     }
