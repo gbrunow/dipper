@@ -17,22 +17,38 @@ export interface Context {
 export class StateMachine {
     private _transitionMap: Map<State, Map<string, State>> = new Map<State, Map<string, State>>();
     private _initialState!: State;
-    private _$currentState: Subject<Context> = new Subject<Context>();
+    private _currentState!: State;
+    private _$currentContext: Subject<Context> = new Subject<Context>();
+    private _globalContext: Object;
 
     constructor() { }
 
-    public run({ initialState }: { initialState: State }) {
-        this._initialState = initialState;
+    public get context(): Object {
+        return this._globalContext;
+    }
 
-        this._$currentState.subscribe(ctx => {
+    public set context(context: Object) {
+        this._globalContext = context;
+    }
+
+    public run({ initialState }: { initialState: State }) {
+        if (!initialState) {
+            throw new Error('The initial state was not defined!');
+        }
+        this._initialState = initialState;
+        this._currentState = initialState;
+
+        this._$currentContext.subscribe(ctx => {
             const state = ctx.state;
+            this._currentState = state;
             state.$event
-                .pipe(takeUntil(this._$currentState))
+                .pipe(takeUntil(this._$currentContext))
                 .subscribe(event => {
                     const next = this._getNextState(event.name, state);
                     if (next) {
-                        state.trigger('leave', event.data);
-                        this._$currentState.next({ state: next, data: event.data });
+                        const data = { ...event.data, context: this._globalContext }
+                        state.trigger('leave', data);
+                        this._$currentContext.next({ state: next, data });
                     } else {
                         console.warn(
                             `No transition defined for state "${state.name}" on event "${event.name}"`,
@@ -41,16 +57,13 @@ export class StateMachine {
                     }
                 });
 
-            state.trigger('enter', ctx.data);
+            state.trigger('enter', { ...ctx.data, context: this._globalContext });
         });
 
-        this._$currentState.next({ state: this._initialState });
-        // this._initialState.trigger('enter');
+        this._$currentContext.next({ state: this._initialState });
     }
 
     public transit({ from, to, on }: TransitionDefinition): StateMachine {
-
-        // this._transitionMap.set(this._transitionToString(on, from), to);
 
         const stateMap = this._transitionMap.get(from);
         if (stateMap) {
@@ -65,11 +78,20 @@ export class StateMachine {
         return this;
     }
 
-    private _getNextState(event: string, state: State): State | undefined {
+    public trigger(hookName: string, data = {}): StateMachine {
+        this._currentState.trigger(hookName, { ...data, context: this._globalContext });
+
+        return this;
+    }
+
+    private _getNextState(event: string, state: State): State {
         const stateMap = this._transitionMap.get(state);
+        let next: State;
         if (stateMap) {
-            return stateMap.get(event) as State;
+            next = stateMap.get(event) as State;
         }
+
+        return next;
     }
 }
 

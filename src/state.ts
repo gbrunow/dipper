@@ -36,7 +36,7 @@ export class State {
         return this;
     }
 
-    public trigger(hookName: string, data = {}) {
+    public trigger(hookName: string, data?: Object) {
         this._hooks
             .filter(r => r.name === hookName)
             .map(r => r.action(data));
@@ -44,7 +44,7 @@ export class State {
         return this;
     }
 
-    public emit(event: string, data = {}) {
+    public emit(event: string, data?: Object) {
         this._$event.next({ name: event, data });
 
         return this;
