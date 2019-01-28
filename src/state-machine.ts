@@ -84,6 +84,12 @@ export class StateMachine {
         return this;
     }
 
+    public emit(event: string, data = {}): StateMachine {
+        this._currentState.emit(event, { ...data, context: this._globalContext });
+
+        return this;
+    }
+
     private _getNextState(event: string, state: State): State {
         const stateMap = this._transitionMap.get(state);
         let next: State;
