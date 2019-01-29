@@ -11,7 +11,7 @@ export interface TransitionDefinition {
 
 export interface Context {
     state: State;
-    event: string;
+    event?: string;
     previous?: State;
     data?: any;
 }
@@ -50,7 +50,7 @@ export class StateMachine {
                     if (next) {
                         const data = { ...event.data, context: this._globalContext }
                         state.trigger('leave', data);
-                        this._$currentContext.next({ state: next, event, previous: state, data });
+                        this._$currentContext.next({ state: next, event: event.name, previous: state, data });
                     } else {
                         console.warn(
                             `No transition defined for state "${state.name}" on event "${event.name}"`,
