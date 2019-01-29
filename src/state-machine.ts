@@ -87,7 +87,7 @@ export class StateMachine {
     }
 
     public emit(event: string, data = {}): StateMachine {
-        this._currentState.emit(event, { ...data, context: this._globalContext });
+        this._currentState.emit(event, { ...data, event, previous: this._currentState, context: this._globalContext });
 
         return this;
     }
