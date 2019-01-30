@@ -1,8 +1,8 @@
-# dipper.js
+# [dipper.js](https://github.com/gbrunow/dipper)
 
 A tiny event-driven finite state machine library for TypeScript/JavaScript.
 
-## Instalation
+# Instalation
 
 ```shell
 npm install dipper.js
@@ -187,5 +187,5 @@ state.emit('some event', { personName: 'Jessica' }); // Jessica lives in Italy
 
 - [ng-dipper-sample](https://github.com/gbrunow/ng-dipper-sample)
 
-## TODO:
+# TODO:
 - Unit Tests
