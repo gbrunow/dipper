@@ -1,4 +1,4 @@
-# dipper.js
+# [dipper.js](https://github.com/gbrunow/dipper)
 
 A tiny event-driven finite state machine library for TypeScript/JavaScript.
 
