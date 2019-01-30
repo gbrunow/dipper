@@ -147,6 +147,42 @@ stateMachine.emit('event-name');
 - `.emit()` will send down an event to a state and may or may not trigger a state transition
 - `.trigger()` will execute a state hook
 
+## Passing Data into States
+
+- Local data
+
+```javascript
+const greeter = (new State())
+    .hook({
+        name: 'enter'
+        action: (data) => console.log(`hi ${data.personName}`);
+    })
+
+...
+
+state.emit('some event', { personName: 'John' }); // hi John
+```
+
+- Context
+
+```javascript
+const stateMachine = new StateMachine();
+stateMachine.context = { country: 'Italy' };
+
+...
+
+const state = (new State())
+    .hook({
+        name: 'enter'
+        action: (data) => console.log(`${data.personName} lives in ${data.context.country}`);
+    });
+
+...
+
+state.emit('some event', { personName: 'Jessica' }); // Jessica lives in Italy
+```
+
+
 ## Code Sample
 
 - [ng-dipper-sample](https://github.com/gbrunow/ng-dipper-sample)
