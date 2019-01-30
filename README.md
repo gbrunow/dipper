@@ -2,7 +2,7 @@
 
 A tiny event-driven finite state machine library for TypeScript/JavaScript.
 
-## Instalation
+# Instalation
 
 ```shell
 npm install dipper.js
@@ -151,5 +151,5 @@ stateMachine.emit('event-name');
 
 - [ng-dipper-sample](https://github.com/gbrunow/ng-dipper-sample)
 
-## TODO:
+# TODO:
 - Unit Tests
