@@ -150,3 +150,6 @@ stateMachine.emit('event-name');
 ## Code Sample
 
 - [ng-dipper-sample](https://github.com/gbrunow/ng-dipper-sample)
+
+## TODO:
+- Unit Tests

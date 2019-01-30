@@ -33,8 +33,5 @@
   },
   "dependencies": {
     "rxjs": "^6.3.3"
-  },
-  "publishConfig": {
-    "registry": "http://npm.caps.ua.edu/"
   }
 }
