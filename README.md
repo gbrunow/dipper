@@ -189,3 +189,4 @@ state.emit('some event', { personName: 'Jessica' }); // Jessica lives in Italy
 
 # TODO:
 - Unit Tests
+- JSDocs
