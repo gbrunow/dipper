@@ -10,7 +10,7 @@ npm install dipper.js
 
 # Usage
 
-`dipper.js` hadles state management while consolidating a few key concepts: `states`, `state machine`, `events`, `transitions` and `hooks`.
+`dipper.js` hadles state management while consolidating a few key concepts: [`states`](#states), [`state machine`](#state-machine), [`events`](#events), [`transitions`](#transitions) and [`hooks`](#hooks).
 
 ## States
 
@@ -26,8 +26,8 @@ const stateTwo = new State();   // naming states is optional,
 
 ## Hooks
 
-Defines state behaviors, most of the you'll need to setup the hooks `enter` and/or `leave`, which are exectuded by default.
-Custom hooks will exectuted uppon being triggered through the `state machine`.
+Defines state behaviors, most of time the you'll need to setup the hooks `enter` and/or `leave`, which the [`state machine`](#state-machine) executes by default.
+Custom hooks will exectuted uppon being triggered through the [`state machine`](#state-machine).
 
 ```javascript
 import { Hook } from 'dipper.js';
@@ -56,7 +56,7 @@ const screamOnEscape: Hook {
 
 ## Hooks and States
 
-This is how to assiciate a hook with a state
+This is how to assiciate a [`hook`](#hooks) with a [`state`](#states)
 
 ```javascript
 import { State, Hook } from 'dipper.js';
@@ -110,7 +110,10 @@ stateMachine.run({initialState: greeter});
 
 ## Transitions
 
-Consider the case of a traffic light that has three states, `green`, `yellow` and `red`.
+Consider the case of a traffic light that has three [`states`](#states):
+- `green`
+- `yellow`
+- `red`
 
 ```javascript
 import { StateMachine } from 'dipper.js';
