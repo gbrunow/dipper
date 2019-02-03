@@ -14,9 +14,12 @@
   },
   "keywords": [
     "state",
+    "states",
     "machine",
-    "statemachine",
-    "states"
+    "state machine",
+    "finite state machine",
+    "event-driven finite state machine",
+    "state management"
   ],
   "repository": {
     "url": "https://github.com/gbrunow/dipper",
