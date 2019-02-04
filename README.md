@@ -63,7 +63,8 @@ import { State, Hook } from 'dipper.js';
 
 const greeter = (new State())
     .hook(sayHiOnEnter)
-    .hook(sayByeOnLeave);
+    .hook(sayByeOnLeave)
+    .hook(screamOnEscape);
 ```
 
 or
