@@ -1,12 +1,12 @@
 {
   "name": "dipper.js",
   "version": "0.2.5",
-  "description": "A state machine library for TypeScript",
-  "main": "lib/index.js",
-  "types": "lib/index/d/ts",
+  "description": "Tiny event-driven finite state machine library for TypeScript/JavaScript",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "start": "npm run build:live",
-    "build": "rm -rf lib/* ; tsc -p .",
+    "build": "rm -rf dist/* ; tsc -p .",
     "build:live": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' examples/run-examples.ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "publisher": "npm run build ; npm publish",
@@ -25,8 +25,12 @@
     "url": "https://github.com/gbrunow/dipper",
     "type": "git"
   },
-  "author": "Guilherme Brunow Gomes",
-  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gbrunow/dipper/issues"
+  },
+  "homepage": "https://github.com/gbrunow/dipper#readme",
+  "author": "Guilherme Brunow Gomes <gbrunow@outlook.com>",
+  "license": "MIT",
   "devDependencies": {
     "@types/node": "^10.12.21",
     "node-emoji": "^1.8.1",
