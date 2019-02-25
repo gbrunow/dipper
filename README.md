@@ -101,6 +101,8 @@ stateMachine.trigger(`escape`);
 
 ## State Machine
 
+### Basics
+
 ```javascript
 import { StateMachine } from 'dipper.js';
 
@@ -108,6 +110,22 @@ const stateMachine = new StateMachine();
 
 stateMachine.run({initialState: greeter});
 ```
+
+### Subscriptions
+
+You may use the `subscriptions` attribute to hold any state relevant subscriptions, the [`state machine`](#state-machine) will automatically unsubscribe from them before moving to the next state.
+
+```javascript
+const subscription = $someObservable.subscribe(() => {
+    // do something
+});
+
+stateMachine.subscriptions.add(subscription);
+```
+
+### before & after helpers
+
+If you have actions that need to be taken before and/or after every state you may do so by setting the `before()` and `after()` callbacks. Those callbacks also have access to the state machine [`context`](#context)
 
 ## Transitions
 
@@ -153,7 +171,7 @@ stateMachine.emit('event-name');
 
 ## Passing Data into States
 
-- Local data
+### Local data
 
 ```javascript
 const greeter = (new State())
@@ -167,7 +185,7 @@ const greeter = (new State())
 state.emit('some event', { personName: 'John' }); // hi John
 ```
 
-- Context
+### Context
 
 ```javascript
 const stateMachine = new StateMachine();

@@ -1,6 +1,7 @@
-import { Subject } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
+import { ActionContext } from './hook';
 import { State } from './state';
 
 export interface TransitionDefinition {
@@ -22,6 +23,10 @@ export class StateMachine {
     private _currentState!: State;
     private _$currentContext: Subject<Context> = new Subject<Context>();
     private _globalContext: Object;
+
+    public subscriptions: Subscription = new Subscription();
+    public before: (data: ActionContext) => void = () => { };
+    public after: (data: ActionContext) => void = () => { };
 
     constructor() { }
 
@@ -48,8 +53,13 @@ export class StateMachine {
                 .subscribe(event => {
                     const next = this._getNextState(event.name, state);
                     if (next) {
+                        this._removeSubscriptions();
+
                         const data = { ...event.data, context: this._globalContext }
+
                         state.trigger('leave', data);
+                        this.after(data);
+
                         this._$currentContext.next({ state: next, event: event.name, previous: state, data });
                     } else {
                         console.warn(
@@ -59,7 +69,9 @@ export class StateMachine {
                     }
                 });
 
-            state.trigger('enter', { ...ctx.data, context: this._globalContext });
+            const data = { ...ctx.data, context: this._globalContext };
+            this.before(data);
+            state.trigger('enter', data);
         });
 
         this._$currentContext.next({ state: this._initialState });
@@ -100,6 +112,11 @@ export class StateMachine {
         }
 
         return next;
+    }
+
+    private _removeSubscriptions(): void {
+        this.subscriptions.unsubscribe();
+        this.subscriptions = new Subscription();
     }
 }
 
