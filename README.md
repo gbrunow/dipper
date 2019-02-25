@@ -127,6 +127,16 @@ stateMachine.subscriptions.add(subscription);
 
 If you have actions that need to be taken before and/or after every state you may do so by setting the `before()` and `after()` callbacks. Those callbacks also have access to the state machine [`context`](#context)
 
+```javascript
+stateMachine.before = (data) => {
+    console.log(`about to enter a state`, data);
+}
+
+stateMachine.after = (data) => {
+    console.log(`just left a state`, data);
+}
+```
+
 ## Transitions
 
 Consider the case of a traffic light that has three [`states`](#states):
