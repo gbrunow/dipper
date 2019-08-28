@@ -184,7 +184,7 @@ stateMachine.emit('event-name');
 ### Local data
 
 ```javascript
-const greeter = (new State())
+const state = (new State())
     .hook({
         name: 'enter'
         action: (data) => console.log(`hi ${data.personName}`);
