@@ -93,12 +93,6 @@ const greeter = (new State())
     });
 ```
 
-## Invoking custom Hooks
-
-```javascript
-stateMachine.trigger(`escape`);
-```
-
 ## State Machine
 
 ### Basics
@@ -109,6 +103,12 @@ import { StateMachine } from 'dipper.js';
 const stateMachine = new StateMachine();
 
 stateMachine.run({initialState: greeter});
+```
+
+## Invoking custom Hooks
+
+```javascript
+stateMachine.trigger(`escape`);
 ```
 
 ### Subscriptions
