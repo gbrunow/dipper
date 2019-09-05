@@ -27,7 +27,7 @@ const stateTwo = new State();   // naming states is optional,
 ## Hooks
 
 Defines state behaviors, most of time the you'll need to setup the hooks `enter` and/or `leave`, which the [`state machine`](#state-machine) executes by default.
-Custom hooks will exectuted uppon being triggered through the [`state machine`](#state-machine).
+Custom hooks will be exectuted when triggered through the [`state machine`](#state-machine).
 
 ```javascript
 import { Hook } from 'dipper.js';
