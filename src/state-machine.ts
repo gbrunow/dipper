@@ -4,20 +4,20 @@ import { takeUntil } from 'rxjs/operators';
 import { ActionContext } from './hook';
 import { State } from './state';
 
-export interface TransitionDefinition<G> {
+export interface TransitionDefinition<G = any> {
     from: State<G>;
     to: State<G>;
     on: string;
 }
 
-export interface StateMachineContext<G> {
+export interface StateMachineContext<G = any> {
     state: State<G>;
     event?: string;
     previous?: State<G>;
     data?: G;
 }
 
-export class StateMachine<G> {
+export class StateMachine<G = any> {
     private _transitionMap: Map<State<G>, Map<string, State<G>>> = new Map<State<G>, Map<string, State<G>>>();
     private _initialState!: State<G>;
     private _currentState!: State<G>;

@@ -2,7 +2,7 @@ import { Observable, Subject } from 'rxjs';
 
 import { Hook } from './hook';
 
-export interface StateProperties<G> {
+export interface StateProperties<G = any> {
     name?: string;
     hooks?: Hook<G>[];
 }
@@ -12,7 +12,7 @@ export interface Event<L = any> {
     data: L;
 }
 
-export class State<G> {
+export class State<G = any> {
     private _hooks: Hook<G>[];
     private _name: string;
     private _$event: Subject<Event> = new Subject<Event>();
