@@ -2,22 +2,22 @@ import { Observable, Subject } from 'rxjs';
 
 import { Hook } from './hook';
 
-export interface StateProperties {
+export interface StateProperties<G> {
     name?: string;
-    hooks?: Hook[];
+    hooks?: Hook<G>[];
 }
 
-export interface Event {
+export interface Event<L = any> {
     name: string;
-    data: any;
+    data: L;
 }
 
-export class State {
-    private _hooks: Hook[];
+export class State<G> {
+    private _hooks: Hook<G>[];
     private _name: string;
     private _$event: Subject<Event> = new Subject<Event>();
 
-    constructor({ name = 'state', hooks = [] }: StateProperties = {}) {
+    constructor({ name = 'state', hooks = [] }: StateProperties<G> = {}) {
         this._name = name;
         this._hooks = hooks;
     }
@@ -30,13 +30,13 @@ export class State {
         return this._$event.asObservable();
     }
 
-    public hook(...hooks: Hook[]): State {
+    public hook(...hooks: Hook<G>[]): State<G> {
         this._hooks.push(...hooks);
 
         return this;
     }
 
-    public trigger(hookName: string, data?: Object) {
+    public trigger(hookName: string, data?: any) {
         this._hooks
             .filter(r => r.name === hookName)
             .map(r => r.action(data));
@@ -44,7 +44,7 @@ export class State {
         return this;
     }
 
-    public emit(event: string, data?: Object) {
+    public emit(event: string, data?: any) {
         this._$event.next({ name: event, data });
 
         return this;
@@ -54,7 +54,7 @@ export class State {
      * Creates a new state based on the current hooks
      * @param properties properties of the extended state
      */
-    public extend({ name, hooks }: StateProperties) {
+    public extend({ name, hooks }: StateProperties<G>) {
         return new State({
             name,
             hooks: [...this._hooks, ...(hooks || [])]

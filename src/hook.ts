@@ -1,13 +1,15 @@
-export interface ActionData {
-    context?: any,
-    event?: string
+export interface ActionContext<G, L = any> {
+    event?: string;
+    global?: G; // state machine context
+    local?: L;
 }
+
 /**
  * Actions are callbacks used by hooks
  */
-export type Action = (data?: ActionData) => void;
+export type Action<G, L = any> = (data?: ActionContext<G, L>) => void;
 
-export type Hook = {
+export type Hook<G, L = any> = {
     name: string; // enter, leave, escape, click, etc
-    action: Action;
+    action: Action<G, L>;
 }
