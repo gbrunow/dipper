@@ -123,17 +123,17 @@ const subscription = $someObservable.subscribe(() => {
 stateMachine.subscriptions.add(subscription);
 ```
 
-### before & after helpers
+### Helpers 'before' & 'after'
 
 If you have actions that need to be taken before and/or after every state you may do so by setting the `before()` and `after()` callbacks. Those callbacks also have access to the state machine [`context`](#context)
 
 ```javascript
-stateMachine.before = (data) => {
-    console.log(`about to enter a state`, data);
+stateMachine.before = (context) => {
+    console.log(`about to enter a state`, context);
 }
 
-stateMachine.after = (data) => {
-    console.log(`just left a state`, data);
+stateMachine.after = (context) => {
+    console.log(`just left a state`, context);
 }
 ```
 
@@ -179,15 +179,17 @@ stateMachine.emit('event-name');
 - `.emit()` will send down an event to a state and may or may not trigger a state transition
 - `.trigger()` will execute a state hook
 
-## Passing Data into States
+## Context
 
-### Local data
+### Local
+
+Local data (context) is emitted to the current state through the `emit`.
 
 ```javascript
 const state = (new State())
     .hook({
-        name: 'enter'
-        action: (data) => console.log(`hi ${data.personName}`);
+        name: 'enter',
+        action: (context) => console.log(`hi ${context.local.personName}`);
     })
 
 ...
@@ -195,7 +197,9 @@ const state = (new State())
 state.emit('some event', { personName: 'John' }); // hi John
 ```
 
-### Context
+### Global
+
+The global context is exposed to every state in by the state machine.
 
 ```javascript
 const stateMachine = new StateMachine();
@@ -205,8 +209,8 @@ stateMachine.context = { country: 'Italy' };
 
 const state = (new State())
     .hook({
-        name: 'enter'
-        action: (data) => console.log(`${data.personName} lives in ${data.context.country}`);
+        name: 'enter',
+        action: (context) => console.log(`${context.local.personName} lives in ${context.global.country}`);
     });
 
 ...
@@ -214,6 +218,65 @@ const state = (new State())
 state.emit('some event', { personName: 'Jessica' }); // Jessica lives in Italy
 ```
 
+## Typing Contexts
+
+> Typing is optional but will allow you to take full advantage of the development tools.
+
+The `global` and `local` component of `ActionContext` can be typed in a number of ways. Below are some examples:
+
+### When creating a [state](#states)
+
+```typescript
+interface GlobalContext {
+    country: string;
+}
+
+interface LocalContext {
+    personName: string;
+}
+
+const state = (new State<GlobalContext, LocalContext>())
+    .hook({
+        name: 'enter',
+        action: (context) => {
+            console.log(`${context.local.personName} lives in ${context.global.country}`);
+        }
+    });
+```
+However, often times you'll need to get different data to different hooks, therefore you might not want to type the [local context](#local) upon creating the state.
+Alternatively it can be typed within the [hook](#hooks) action like so:
+
+```typescript
+const state = (new State<GlobalContext>())
+    .hook({
+        name: 'enter',
+        action: (context: ActionContext<GlobalContext, LocalContext>) => {
+            // global and local contexts are type here
+            console.log(`${context.local.personName} lives in ${context.global.country}`);
+        }
+    })
+    .hook({
+        name: 'escape',
+        action: (context) {
+            // global context is still typed here!
+        }
+    });
+```
+
+## Whe creating a [state machine](#state-machine)
+
+```typescript
+const stateMachine = new StateMachine<GlobalContext>();
+
+...
+
+const context = stateMachine.context; // context is of type GlobalContext
+```
+Therefore:
+```typscript
+context.global.country          // ✅
+context.global.personName       // ❌
+```
 
 ## Code Sample
 
