@@ -97,13 +97,21 @@ export class StateMachine<G = any> {
     }
 
     public trigger(hookName: string, data: any = {}): StateMachine<G> {
-        this._currentState.trigger(hookName, { ...data, context: this._globalContext });
+        this._currentState.trigger(hookName, {
+            global: this._globalContext,
+            local: data,
+        });
 
         return this;
     }
 
     public emit(event: string, data: any = {}): StateMachine<G> {
-        this._currentState.emit(event, { ...data, event, previous: this._currentState, context: this._globalContext });
+        this._currentState.emit(event, {
+            local: data,
+            global: this._globalContext,
+            event,
+            previous: this._currentState
+        });
 
         return this;
     }

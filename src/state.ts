@@ -12,6 +12,11 @@ export interface Event<L = any> {
     data: L;
 }
 
+export interface StateContext<G = any, L = any> {
+    global: G;
+    local: L;
+}
+
 export class State<G = any> {
     private _hooks: Hook<G>[];
     private _name: string;
@@ -36,10 +41,10 @@ export class State<G = any> {
         return this;
     }
 
-    public trigger(hookName: string, data?: any) {
+    public trigger(hookName: string, context?: StateContext) {
         this._hooks
             .filter(r => r.name === hookName)
-            .map(r => r.action(data));
+            .map(r => r.action(context));
 
         return this;
     }
