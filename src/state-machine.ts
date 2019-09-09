@@ -1,7 +1,7 @@
 import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { ActionContext } from './hook';
+import { ActionData } from './hook';
 import { State } from './state';
 
 export interface TransitionDefinition {
@@ -25,8 +25,8 @@ export class StateMachine {
     private _globalContext: Object;
 
     public subscriptions: Subscription = new Subscription();
-    public before: (data: ActionContext) => void = () => { };
-    public after: (data: ActionContext) => void = () => { };
+    public before: (data: ActionData) => void = () => { };
+    public after: (data: ActionData) => void = () => { };
 
     constructor() { }
 
