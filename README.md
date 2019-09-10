@@ -46,7 +46,7 @@ const sayByeOnLeave: Hook = {
     }
 }
 
-const screamOnEscape: Hook {
+const screamOnEscape: Hook = {
     name: 'escape',
     action: () => {
         console.log('AAAAAARRRGH');
