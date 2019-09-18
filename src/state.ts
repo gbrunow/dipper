@@ -1,6 +1,6 @@
 import { Observable, Subject } from 'rxjs';
 
-import { Hook } from './hook';
+import { ActionContext, Hook } from './hook';
 
 export interface StateProperties<G = any> {
     name?: string;
@@ -10,11 +10,6 @@ export interface StateProperties<G = any> {
 export interface Event<L = any> {
     name: string;
     data: L;
-}
-
-export interface StateContext<G = any, L = any> {
-    global: G;
-    local: L;
 }
 
 export class State<G = any> {
@@ -41,7 +36,7 @@ export class State<G = any> {
         return this;
     }
 
-    public trigger(hookName: string, context?: StateContext) {
+    public trigger(hookName: string, context?: ActionContext<G>) {
         this._hooks
             .filter(r => r.name === hookName)
             .map(r => r.action(context));

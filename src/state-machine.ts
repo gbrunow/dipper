@@ -5,7 +5,7 @@ import { ActionContext } from './hook';
 import { State } from './state';
 
 export interface TransitionDefinition<G = any> {
-    from: State<G>;
+    from: State<G> | '*';
     to: State<G>;
     on: string;
 }
@@ -14,19 +14,18 @@ export interface StateMachineContext<G = any> {
     state: State<G>;
     event?: string;
     previous?: State<G>;
-    data?: G;
 }
 
 export class StateMachine<G = any> {
-    private _transitionMap: Map<State<G>, Map<string, State<G>>> = new Map<State<G>, Map<string, State<G>>>();
+    private _transitionMap: Map<State<G> | '*', Map<string, State<G>>> = new Map<State<G>, Map<string, State<G>>>();
     private _initialState!: State<G>;
     private _currentState!: State<G>;
     private _$currentContext: Subject<StateMachineContext<G>> = new Subject<StateMachineContext<G>>();
     private _globalContext: G;
 
     public subscriptions: Subscription = new Subscription();
-    public before: (data: ActionContext<G>) => void = () => { };
-    public after: (data: ActionContext<G>) => void = () => { };
+    public before: (context: ActionContext<G>) => void = () => { };
+    public after: (context: ActionContext<G>) => void = () => { };
 
     constructor() { }
 
@@ -52,20 +51,26 @@ export class StateMachine<G = any> {
         this._$currentContext.subscribe(ctx => {
             const state = ctx.state;
             this._currentState = state;
+
+            const context = { global: this._globalContext };
+
             state.$event
                 .pipe(takeUntil(this._$currentContext))
                 .subscribe(event => {
-                    const next = this._getNextState(event.name, state);
+                    const next = this._getNextState(event.name, state) || this._getNextState(event.name, '*');
                     if (next) {
                         this._removeSubscriptions();
 
-                        const data = { ...event.data, context: this._globalContext }
+                        state.trigger('leave', context);
+                        this.after(context);
 
-                        state.trigger('leave', data);
-                        this.after(data);
-
-                        this._$currentContext.next({ state: next, event: event.name, previous: state, data });
+                        this._$currentContext.next({
+                            state: next,
+                            previous: state,
+                            event: event.name,
+                        });
                     } else {
+
                         console.warn(
                             `No transition defined for state "${state.name}" on event "${event.name}"`,
                             { details: { state, event, transitions: this._transitionMap } }
@@ -73,9 +78,8 @@ export class StateMachine<G = any> {
                     }
                 });
 
-            const data = { local: { ...ctx.data }, global: this._globalContext };
-            this.before(data);
-            state.trigger('enter', data);
+            this.before(context);
+            state.trigger('enter', context);
         });
 
         this._$currentContext.next({ state: this._initialState });
@@ -116,7 +120,7 @@ export class StateMachine<G = any> {
         return this;
     }
 
-    private _getNextState(event: string, state: State<G>): State<G> {
+    private _getNextState(event: string, state: State<G> | '*'): State<G> {
         const stateMap = this._transitionMap.get(state);
         let next: State<G>;
         if (stateMap) {

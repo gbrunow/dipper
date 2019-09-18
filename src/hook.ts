@@ -1,6 +1,6 @@
 export interface ActionContext<G = any, L = any> {
     event?: string;
-    global?: G; // state machine context
+    global?: G;
     local?: L;
 }
 
