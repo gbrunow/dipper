@@ -14,6 +14,7 @@ export interface StateMachineContext<G = any> {
     state: State<G>;
     event?: string;
     previous?: State<G>;
+    local?: any;
 }
 
 export class StateMachine<G = any> {
@@ -52,7 +53,7 @@ export class StateMachine<G = any> {
             const state = ctx.state;
             this._currentState = state;
 
-            const context = { global: this._globalContext };
+            const context = { global: this._globalContext, local: ctx.local };
 
             state.$event
                 .pipe(takeUntil(this._$currentContext))
@@ -61,6 +62,8 @@ export class StateMachine<G = any> {
                     if (next) {
                         this._removeSubscriptions();
 
+                        // context.local = event.data;
+
                         state.trigger('leave', context);
                         this.after(context);
 
@@ -68,6 +71,7 @@ export class StateMachine<G = any> {
                             state: next,
                             previous: state,
                             event: event.name,
+                            local: event.data,
                         });
                     } else {
 
